@@ -1,6 +1,6 @@
 # Chisel FPGA Pin Finder
 
-The idea for this project came from RISC-V Brasil Telegram list (thanks Teske and Marcelo) for a wish to map the unidentified pins on the Storey Peak Stratix V FPGA board.
+The idea for this project came from RISC-V Brasil Telegram list (thanks [@racerxdl](https://github.com/racerxdl) and [@samsoniuk](https://github.com/samsoniuk)) for a wish to map the unidentified pins on the Storey Peak Stratix V FPGA board.
 
 The idea is to add the pins to the IO and constraints file and instantiate the PinFinder class in that pin. This UART starts writing the pin name to the pin that can be captured by a USB-Serial converter and a console configured at 115200 baud, 8N1.
 
