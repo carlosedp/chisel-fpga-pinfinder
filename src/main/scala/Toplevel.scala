@@ -1,28 +1,46 @@
 import chisel3._
 import chisel3.util._
+import chisel3.experimental._
+import firrtl.annotations.PresetAnnotation
 
-// Toplevel
-class Toplevel(frequency: Int, baudRate: Int = 115200) extends Module {
+// Toplevel (use RawModule to define our own Clock and Reset)
+class Toplevel(frequency: Int, baudRate: Int = 115200) extends RawModule {
   val io = IO(new Bundle {
-    val led0 = Output(Bool())
-    // Pins to scan (Test on ULX3S)
-    val tx   = Output(UInt(1.W))
-    val led1 = Output(UInt(1.W))
+    val clock = Input(Clock())
+    val led0  = Output(Bool())
+    //// Pins to scan (Test on ULX3S)
+    // val tx   = Output(UInt(1.W))
+    // val led1 = Output(UInt(1.W))
+    //// Pins to scan (StoreyPeak)
+    val A10 = Output(UInt(1.W))
+    val B10 = Output(UInt(1.W))
+
   })
 
-  // Send message to pins
-  // This is not efficient since each pin gets it's own TX
-  // Pins to scan (Test on ULX3S)
-  val tx   = new PinFind("TX ", io.tx, frequency, baudRate)
-  val led1 = new PinFind("LED1 ", io.led1, frequency, baudRate)
+  // Initialize registers to their reset value when the bitstream is programmed since there is no reset wire
+  val reset = IO(Input(AsyncReset()))
+  annotate(new ChiselAnnotation {
+    override def toFirrtl = PresetAnnotation(reset.toTarget)
+  })
 
-  // Heartbeat led
-  val led              = RegInit(0.U(1.W))
-  val (_, counterWrap) = Counter(true.B, frequency / 2)
-  when(counterWrap) {
-    led := ~led
+  chisel3.withClockAndReset(io.clock, reset) {
+    // Send message to pins
+    //// Pins to scan (Test on ULX3S)
+    // new PinFind("TX ", io.tx, frequency, baudRate)
+    // new PinFind("LED1 ", io.led1, frequency, baudRate)
+
+    //// Pins to scan (StoreyPeak)
+    new PinFind("A10 ", io.A10, frequency, baudRate)
+    new PinFind("B10 ", io.B10, frequency, baudRate)
+
+    // Heartbeat led
+    val led              = RegInit(0.U(1.W))
+    val (_, counterWrap) = Counter(true.B, frequency / 2)
+    when(counterWrap) {
+      led := ~led
+    }
+    io.led0 := led
   }
-  io.led0 := led
 }
 
 class PinFind(msg: String, output: UInt, frequency: Int, baudRate: Int) {
@@ -48,8 +66,8 @@ class PinFind(msg: String, output: UInt, frequency: Int, baudRate: Int) {
 object Toplevel extends App {
   // Generate Verilog
   (new chisel3.stage.ChiselStage).emitVerilog(
-    new Toplevel(25000000), // For ULX3S
-    // new Toplevel(125000000), // For StoreyPeak
+    // new Toplevel(25000000), // For ULX3S
+    new Toplevel(125000000), // For StoreyPeak
     args
   )
 }
