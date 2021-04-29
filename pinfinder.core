@@ -1,0 +1,58 @@
+CAPI=2:
+
+name: carlosedp:demo:pinfinder:0
+
+filesets:
+  ulx3s-85:
+    depend: ["fusesoc:utils:generators:0.1.6"]
+    files:
+      - constraints/ecp5-ulx3s.lpf: { file_type: LPF }
+
+  storey_peak_stratixV:
+    depend: ["fusesoc:utils:generators:0.1.6"]
+    files:
+      - constraints/storey_peak_stratixV.sdc: { file_type: SDC }
+      - constraints/storey_peak_stratixV.tcl: { file_type: tclSource }
+
+generate:
+  ulx3s:
+    generator: chisel
+    parameters:
+      # extraargs: "-board ulx3s"
+      chiselproject: toplevel
+      copy_core: true
+      output:
+        files:
+          - generated/Toplevel.v: { file_type: verilogSource }
+
+  storey_peak_stratixV:
+    generator: chisel
+    parameters:
+      # extraargs: "-board storey_peak_stratixV"
+      chiselproject: toplevel
+      copy_core: true
+      output:
+        files:
+          - generated/Toplevel.v: { file_type: verilogSource }
+
+targets:
+  ulx3s_85:
+    default_tool: trellis
+    description: ULX3S 85k version
+    filesets: [ulx3s-85]
+    generate: [ulx3s]
+    tools:
+      trellis:
+        nextpnr_options: [--package, CABGA381, --85k]
+    toplevel: Toplevel
+
+  storey_peak_stratixV:
+    default_tool : quartus
+    description: Microsoft Storey Peak (Catapult) Stratix V FPGA Accelerator
+    filesets : [storey_peak_stratixV]
+    generate : [storey_peak_stratixV]
+    tools:
+      quartus:
+        family : Stratix V
+        device : 5SGSMD5K1F40C2
+    toplevel: Toplevel
