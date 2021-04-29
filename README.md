@@ -2,11 +2,23 @@
 
 The idea for this project came from RISC-V Brasil Telegram list (thanks [@racerxdl](https://github.com/racerxdl) and [@samsoniuk](https://github.com/samsoniuk)) for a wish to map the unidentified pins on the Storey Peak Stratix V FPGA board.
 
-The idea is to add the pins to the IO and constraints file and instantiate the PinFinder class in that pin. This UART starts writing the pin name to the pin that can be captured by a USB-Serial converter and a console configured at 115200 baud, 8N1.
+![Connection](img/Diagram1.png)
+
+The module uses a Serial TX attached to each pin you want to find printing to it it's name. One can then take a USB-Serial module connected to the computer USB and a serial console (115200 8N1) open then go probing each of the "guessed" pin. If the terminal prints the pin name, you found it.
+
+![Terminal](img/Terminal1.png)
+
+To configure, add the pins to the IO section and constraints file and instantiate the PinFinder class in that pin.
 
 The project was tested on a Radiona ULX3S (where I already knew some pins) and then on the Storey Peak LED pins (that were already known too).
 
 Next the idea is to map the other pins like PCIe, QSFP control pins and etc.
+
+Quick demo:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/0Ij2CQuhhj4/0.jpg)](https://youtu.be/0Ij2CQuhhj4)
+
+The project can be used to map any unknown pins on an FPGA where it's location in the PCB is not known but accessible for a probe. One can select pins from a bank, configure in this tool and probe the PCB to search the pin.
 
 ## Building
 
@@ -56,3 +68,4 @@ fusesoc run --target=storey_peak_stratixV --setup carlosedp:demo:pinfinder
 
 This will generate the base files, `cd` into the generated directory (`./build/carlosedp_demo_pinfinder_0/storey_peak_stratixV-quartus`) in the machine Quartus is installed and run `make project`. Open the `carlosedp_demo_pinfinder_0.qpf` project for synthesize and PnR. Then program to the FPGA.
 
+The board can be programmed with the [JTAG to Quartus](https://github.com/j-marjanovic/jtag-quartus-ft232h) driver.
