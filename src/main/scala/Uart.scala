@@ -1,6 +1,8 @@
 /*
  *
  * A UART is a serial port, also called an RS232 interface.
+ * This file was copied from Martin Schoeberl examples repository at:
+ * https://github.com/schoeberl/chisel-examples/blob/master/src/main/scala/uart/Uart.scala
  *
  */
 
