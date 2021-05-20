@@ -10,7 +10,7 @@ The module uses a Serial TX attached to each pin you want to find printing to it
 
 To configure, add the pins to the IO section and constraints file and instantiate the PinFinder class in that pin.
 
-The project was tested on a Radiona ULX3S (where I already knew some pins) and then on the Storey Peak LED pins (that were already known too).
+It was tested on a Radiona ULX3S (where I already knew some pins) and then on the Storey Peak LED pins (that were already known too).
 
 Next the idea is to map the other pins like PCIe, QSFP control pins and etc.
 
@@ -18,7 +18,31 @@ Quick demo:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/0Ij2CQuhhj4/0.jpg)](https://youtu.be/0Ij2CQuhhj4)
 
+## Usage
+
 The project can be used to map any unknown pins on an FPGA where it's location in the PCB is not known but accessible for a probe. One can select pins from a bank, configure in this tool and probe the PCB to search the pin.
+
+Select the pins to be testes (likely from a known bank), as trial-and-error, add it to the `Toplevel.scala` file like:
+
+```scala
+val io = IO(new Bundle {
+    // Add pins here like:
+    val A10  = Output(UInt(1.W)) // The pin name must match the constraints file in the format io_NAME. Eg. io_A10.
+
+// Then instantiate the pinfinder for that pin
+new PinFind("A10 ", io.A10, frequency, baudRate)
+```
+
+Then add to the constraints (for Quartus as example):
+
+```tcl
+set_location_assignment PIN_AW26 -to io_AW26
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_AW26
+set_instance_assignment -name SLEW_RATE 0 -to io_AW26
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to io_AW26
+```
+
+Then build the module and program to the FPGA. After programming, go "poking" the pins with the probe attached to a serial RX in the terminal (could be Putty, Minicom, etc) to try to identify the configured pins.
 
 ## Building
 

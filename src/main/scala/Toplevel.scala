@@ -12,8 +12,10 @@ class Toplevel(frequency: Int, baudRate: Int = 115200) extends RawModule {
     // val tx   = Output(UInt(1.W))
     // val led1 = Output(UInt(1.W))
     //// Pins to scan (StoreyPeak)
-    val A10 = Output(UInt(1.W))
-    val B10 = Output(UInt(1.W))
+    val A10  = Output(UInt(1.W))
+    val B10  = Output(UInt(1.W))
+    val AW26 = Output(UInt(1.W))
+    val AV26 = Output(UInt(1.W))
 
   })
 
@@ -32,6 +34,8 @@ class Toplevel(frequency: Int, baudRate: Int = 115200) extends RawModule {
     //// Pins to scan (StoreyPeak)
     new PinFind("A10 ", io.A10, frequency, baudRate)
     new PinFind("B10 ", io.B10, frequency, baudRate)
+    new PinFind("AW26 ", io.AW26, frequency, baudRate)
+    new PinFind("AV26 ", io.AV26, frequency, baudRate)
 
     // Heartbeat led
     val led              = RegInit(0.U(1.W))

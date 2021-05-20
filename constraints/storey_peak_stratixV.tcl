@@ -23,3 +23,12 @@ set_location_assignment PIN_B10 -to io_B10
 set_instance_assignment -name IO_STANDARD "2.5 V" -to io_B10
 set_instance_assignment -name SLEW_RATE 0 -to io_B10
 set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to io_B10
+
+set_location_assignment PIN_AW26 -to io_AW26
+set_location_assignment PIN_AV26 -to io_AV26
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_AW26
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_AV26
+set_instance_assignment -name SLEW_RATE 0 -to io_AW26
+set_instance_assignment -name SLEW_RATE 0 -to io_AV26
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to io_AW26
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to io_AV26
