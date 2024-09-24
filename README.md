@@ -22,15 +22,18 @@ Quick demo:
 
 The project can be used to map any unknown pins on an FPGA where it's location in the PCB is not known but accessible for a probe. One can select pins from a bank, configure in this tool and probe the PCB to search the pin.
 
-Select the pins to be testes (likely from a known bank), as trial-and-error, add it to the `Toplevel.scala` file like:
+Select the pins to be testes (likely from a known bank), as trial-and-error, change the variables `pinsToTest` and `frequency` in the `Toplevel.scala` file like:
 
 ```scala
-val io = IO(new Bundle {
-    // Add pins here like:
-    val A10  = Output(UInt(1.W)) // The pin name must match the constraints file in the format io_NAME. Eg. io_A10.
+  // Change the `pinsToTest` variable to test different pins.
+  // Do not change the rest of the code.
+  // Define pins to test. Must match the pin name from the constraints file for your board.
+  val pinsToTest = Seq("A10", "B10", "AW26", "AV26")
 
-// Then instantiate the pinfinder for that pin
-new PinFind("A10 ", io.A10, frequency, baudRate)
+  // Define the frequency of the clock signal in Hz for the board you are using.
+  // For ULX3S, use 25000000
+  // For StoreyPeak, use 125000000
+  val frequency = 125000000
 ```
 
 Then add to the constraints (for Quartus as example):
